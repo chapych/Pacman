@@ -9,16 +9,23 @@ public class PlayerMovement : MonoBehaviour
     private Animator animator;
     private float speed;
     private Vector3 velocity;
+    private Rigidbody2D rb;
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
         speed = data.speed;
     }
 
-    private void Update()
+    //private void Update()
+    //{
+    //    transform.position += Time.deltaTime * velocity;
+    //}
+
+    private void FixedUpdate()
     {
-        transform.position += Time.deltaTime * velocity;
+        rb.velocity = velocity;
     }
 
     public void OnMove(InputValue inputValue)

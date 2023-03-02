@@ -6,5 +6,5 @@ using UnityEngine;
 public class DataScriptableObject : ScriptableObject
 {
     public float speed;
-    
+    public float cellSize;
 }

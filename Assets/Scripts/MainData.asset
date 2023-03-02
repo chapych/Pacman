@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: MainData
   m_EditorClassIdentifier: 
   speed: 10
+  cellSize: 3

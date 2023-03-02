@@ -11,9 +11,10 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 velocity;
     private Rigidbody2D rb;
     private bool IsNearWall = false;
-    private float threshold = 0.1f; //for IsMoving() Method
+    public float threshold = 0.8f; //for IsMoving() Method
     private Vector2 previousPosition;
-    private bool isMoving = false;
+    private Vector2 nextVelocity;
+    public LayerMask walls;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,34 +27,35 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.velocity = velocity;
-        if (!IsMoving()) animator.SetFloat("Speed", 0);
-        else animator.SetFloat("Speed", velocity.magnitude);
-    }
-
-    private void Update()
-    {
-       
+        if(!IsWall() && nextVelocity.magnitude!=0)
+        {
+            velocity = nextVelocity;
+            nextVelocity = Vector2.zero;
+        }
+        Vector2 translation = velocity * Time.fixedDeltaTime;
+        rb.MovePosition((Vector2)transform.position + translation);
+        AnimationUpdate();
     }
 
     public void OnMove(InputValue inputValue)
     {
         Vector2 inputVector = inputValue.Get<Vector2>();
         if (inputVector.magnitude == 0) return;
-        velocity = speed * inputVector;
-        animator.SetFloat("HorizontalSpeed", velocity.x);
-        animator.SetFloat("VerticalSpeed", velocity.y);
+        nextVelocity = speed * inputVector;
     }
 
-    private bool IsMoving()
+    public bool IsWall()
     {
-        Vector2 currentPosition = transform.position;
-        Debug.Log(currentPosition + " "+ previousPosition);
-        if ((previousPosition - currentPosition).magnitude > 0) isMoving = true;
-        else isMoving = false;
-        Debug.Log((previousPosition - currentPosition).magnitude);
-        previousPosition = currentPosition;
-        return isMoving;
+        RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, Vector2.one * data.cellSize*0.9f, 0, nextVelocity, data.cellSize, walls);
+        return (raycastHit.collider != null);
+    }
+
+    private void AnimationUpdate()
+    {
+        animator.SetFloat("Speed", velocity.magnitude);
+        animator.SetFloat("HorizontalSpeed", velocity.x);
+        animator.SetFloat("VerticalSpeed", velocity.y);
+
     }
 
 

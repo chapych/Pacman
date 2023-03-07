@@ -12,7 +12,6 @@ public class Coin : MonoBehaviour, ICollectable
     }
     public void ObtainItemHandler()
     {
-        Debug.Log("smth");
         Destroy(this);
     }
 

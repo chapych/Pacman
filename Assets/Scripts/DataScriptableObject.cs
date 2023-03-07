@@ -6,5 +6,8 @@ using UnityEngine;
 public class DataScriptableObject : ScriptableObject
 {
     public float speed;
+    [SerializeField]
     public float cellSize;
+    
+    
 }

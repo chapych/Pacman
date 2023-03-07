@@ -5,25 +5,22 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public DataScriptableObject data;
-    private Animator animator;
+    [SerializeField]
+    private DataScriptableObject data;
+    [SerializeReference]
+    private LayerMask walls;
+    [HideInInspector]
+    public Vector3 velocity;
+
     private float speed;
-    private Vector3 velocity;
     private Rigidbody2D rb;
-    private bool IsNearWall = false;
-    public float threshold = 0.8f; //for IsMoving() Method
-    private Vector2 previousPosition;
     private Vector2 nextVelocity;
-    public LayerMask walls;
-    // Start is called before the first frame update
-    void Start()
+    
+    void Awake()
     {
-        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         speed = data.speed;
     }
-
-   
 
     private void FixedUpdate()
     {
@@ -34,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
         }
         Vector2 translation = velocity * Time.fixedDeltaTime;
         rb.MovePosition((Vector2)transform.position + translation);
-        AnimationUpdate();
+        
     }
 
     public void OnMove(InputValue inputValue)
@@ -50,13 +47,7 @@ public class PlayerMovement : MonoBehaviour
         return (raycastHit.collider != null);
     }
 
-    private void AnimationUpdate()
-    {
-        animator.SetFloat("Speed", velocity.magnitude);
-        animator.SetFloat("HorizontalSpeed", velocity.x);
-        animator.SetFloat("VerticalSpeed", velocity.y);
-
-    }
+    
 
 
 

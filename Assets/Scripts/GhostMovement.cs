@@ -15,24 +15,17 @@ public class GhostMovement : MovementController
 
     private void Start()
     {
-        //aimPoint = tileMap.WorldToCell(Pacman.transform.position);
+        
         var start = new Vector3Int(0,0,0);
         start.x = (int)Pacman.transform.position.x;
         start.y = (int)Pacman.transform.position.y;
-        aimPoint = tileMap.GetCellCenterWorld(start);
         speed = data.speed;
         stack = new NonRepeatableInARowStack<Vector3>();
-        UpdateVelocityQueue();
-        nextVelocity = speed * stack.Pop();
+
     }
     protected override void UpdateVelocity()
     {
-        var start = new Vector3Int(0, 0, 0);
-        start.x = (int)Pacman.transform.position.x;
-        start.y = (int)Pacman.transform.position.y;
-        aimPoint = tileMap.GetCellCenterWorld(start);
-
-        //aimPoint = tileMap.WorldToCell(Pacman.transform.position);
+        DefineAimPoint();
         UpdateVelocityQueue();
         if (stack.List.Count == 0)
         {
@@ -58,7 +51,7 @@ public class GhostMovement : MovementController
     
     SingleLinkedList<Vector3> GetPath(Vector3 aimPoint)
     {
-        var startPoint = tileMap.WorldToCell(this.transform.position);
+        var startPoint = tileMap.WorldToCell(this.transform.position) + Vector3.one * cellSize/2;
         var queue = new Queue<SingleLinkedList<Vector3>>();
         var visited = new HashSet<Vector3>();
         queue.Enqueue(new SingleLinkedList<Vector3>(startPoint));
@@ -66,7 +59,6 @@ public class GhostMovement : MovementController
         while (queue.Count > 0)
         {
             var currentList = queue.Dequeue();
-            //Debug.Log(aimPoint + " " + tileMap.WorldToCell(currentList.Value));
             if (tileMap.WorldToCell(currentList.Value) == aimPoint) return currentList;
             foreach (Vector3 item in NeighboursOf(currentList.Value)) //check if point is in box not necessary  because of double outter wall layer
                 if (!tileMap.HasTile(tileMap.WorldToCell(item)))
@@ -89,6 +81,11 @@ public class GhostMovement : MovementController
             for (var shiftY = -cellSize; shiftY <= cellSize; shiftY += cellSize)
                 if (Math.Abs(shiftX) != Math.Abs(shiftY))
                     yield return new Vector3(currentX + (int)shiftX, currentY + (int)shiftY, 0);
+    }
+
+    protected virtual void DefineAimPoint()
+    {
+
     }
 }
 

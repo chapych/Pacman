@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: RedGhostController
+  m_Controller: {fileID: 9100000, guid: 1dbe18e639ecc834aabf7fec1894cbaa, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 79be90bad7e893c409b876bfef470da8, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 519ea8dcc7cfea64fb5deaa088aa57c4, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: f3628074aa5795344b554cb71d8d5505, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 2ad63beb4a0ac664d9974a1604142108, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 8dc760c7712606142913daa2ee5281e7, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 9b9ef6618fd872e4ba320c14c2ee3eb8, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 7a0ffc55a6945654d9fe07b2034b9a1f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 7865d941c8607c2478e2fa6f4807582f, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: e772105097465e049b991556a884ef81, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b8c527a86fcfa6e4e8793bc3bd6f910f, type: 2}

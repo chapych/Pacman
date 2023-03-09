@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PlayerAnimationController : AnimationController
 {
-    private PlayerMovement playerMovement;
+    private MovementController playerMovement;
     void Awake()
     {
         animator = GetComponent<Animator>();
-        playerMovement = GetComponent<PlayerMovement>();
+        playerMovement = GetComponent<MovementController>();
     }
 
     // Update is called once per frame

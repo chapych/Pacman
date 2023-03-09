@@ -8,18 +8,11 @@ public class InteractionWithElements : MonoBehaviour
 {
     [SerializeField]
     private Tilemap tilemap;
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerStay2D(Collider2D other)
     {
-        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Dots"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Dots"))
         {
-            Vector2 hitPosition = Vector2.zero;
-
-            foreach (ContactPoint2D hit in collision.contacts)
-            {
-                hitPosition.x = hit.point.x - 0.01f * hit.normal.x;
-                hitPosition.y = hit.point.y - 0.01f * hit.normal.y;
-                tilemap.SetTile(tilemap.WorldToCell(hitPosition), null);
-            }
+            tilemap.SetTile(tilemap.WorldToCell(this.transform.position), null);
         }
     }
 

@@ -7,74 +7,72 @@ using UnityEngine.Tilemaps;
 public class GhostMovement : MovementController
 {
     public Tilemap tileMap;
-    protected float cellSize;
     public Vector3 aimPoint;
-    private NonRepeatableInARowQueue<Vector3> queue;
+    private NonRepeatableInARowStack<Vector3> stack;
+    float speed;
+    public GameObject Pacman;
 
 
     private void Start()
     {
-        aimPoint = tileMap.WorldToCell(aimPoint);
-        Debug.Log(aimPoint);
-        //queue = new NonRepeatableInARowQueue<Vector3>();
-        //VelocityQueue();
-        //nextVelocity = queue.Dequeue();
+        //aimPoint = tileMap.WorldToCell(Pacman.transform.position);
+        var start = new Vector3Int(0,0,0);
+        start.x = (int)Pacman.transform.position.x;
+        start.y = (int)Pacman.transform.position.y;
+        aimPoint = tileMap.GetCellCenterWorld(start);
+        speed = data.speed;
+        stack = new NonRepeatableInARowStack<Vector3>();
+        UpdateVelocityQueue();
+        nextVelocity = speed * stack.Pop();
     }
-    private void UpdateVelocity()
+    protected override void UpdateVelocity()
     {
-        VelocityQueue();
-        if (nextVelocity == Vector2.zero)
-        {
-            nextVelocity = queue.Dequeue();
-        }
+        var start = new Vector3Int(0, 0, 0);
+        start.x = (int)Pacman.transform.position.x;
+        start.y = (int)Pacman.transform.position.y;
+        aimPoint = tileMap.GetCellCenterWorld(start);
 
+        //aimPoint = tileMap.WorldToCell(Pacman.transform.position);
+        UpdateVelocityQueue();
+        if (stack.List.Count == 0)
+        {
+            nextVelocity = Vector2.zero;
+            return;
+        }
+         nextVelocity = speed * stack.Pop();
     }
-    [ContextMenu("Test")]
-    protected void VelocityQueue()
+    protected void UpdateVelocityQueue()
     {
+        stack.Clear();
         var path = GetPath(aimPoint);
+        if (path == null) return;
         var previous = path.Value;
         foreach (var point in path)
         {
-            Debug.Log(point);
             if (point == aimPoint)
                 continue;
-            queue.Add(previous - point);
+            stack.Add(previous - point);
             previous = point;
         }
-        foreach (var i in queue)
-            Debug.Log(i);
     }
-
-    public void Test()
-    {
-        var solution = GetPath(aimPoint);
-        if (solution == null)
-            Debug.Log("NULL");
-        else
-        {
-            foreach (var item in solution)
-                Debug.Log(item);
-        }
-    }
-    SingleLinkedList<Vector3Int> GetPath(Vector2 aimPointt)
+    
+    SingleLinkedList<Vector3> GetPath(Vector3 aimPoint)
     {
         var startPoint = tileMap.WorldToCell(this.transform.position);
-        var aimPoint = tileMap.WorldToCell(aimPointt);
-        var queue = new Queue<SingleLinkedList<Vector3Int>>();
-        var visited = new HashSet<Vector3Int>();
-        queue.Enqueue(new SingleLinkedList<Vector3Int>(startPoint));
+        var queue = new Queue<SingleLinkedList<Vector3>>();
+        var visited = new HashSet<Vector3>();
+        queue.Enqueue(new SingleLinkedList<Vector3>(startPoint));
         visited.Add(startPoint);
         while (queue.Count > 0)
         {
             var currentList = queue.Dequeue();
-
-            if (currentList.Value == aimPoint) return currentList;
-            foreach (Vector3Int item in NeighboursOf(currentList.Value)) //check if point is in box not necessary  because of double outter wall layer
+            //Debug.Log(aimPoint + " " + tileMap.WorldToCell(currentList.Value));
+            if (tileMap.WorldToCell(currentList.Value) == aimPoint) return currentList;
+            foreach (Vector3 item in NeighboursOf(currentList.Value)) //check if point is in box not necessary  because of double outter wall layer
                 if (!tileMap.HasTile(tileMap.WorldToCell(item)))
                     if (!visited.Contains(item))
                     {
-                        var newList = new SingleLinkedList<Vector3Int>(item, currentList);
+                        var newList = new SingleLinkedList<Vector3>(item, currentList);
                         visited.Add(item);
                         queue.Enqueue(newList);
                         Debug.DrawLine(currentList.Value, item, Color.red, 3);
@@ -83,14 +81,14 @@ public class GhostMovement : MovementController
         return null;
     }
 
-    IEnumerable NeighboursOf(Vector3Int point)
+    IEnumerable NeighboursOf(Vector3 point)
     {
         var currentX = point.x;
         var currentY = point.y;
         for (var shiftX = -cellSize; shiftX <= cellSize; shiftX += cellSize)
             for (var shiftY = -cellSize; shiftY <= cellSize; shiftY += cellSize)
                 if (Math.Abs(shiftX) != Math.Abs(shiftY))
-                    yield return new Vector3Int(currentX + (int)shiftX, currentY + (int)shiftY, 0);
+                    yield return new Vector3(currentX + (int)shiftX, currentY + (int)shiftY, 0);
     }
 }
 

@@ -1,33 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class NonRepeatableInARowQueue<T> : IEnumerable<T>
+public class NonRepeatableInARowStack<T> : IEnumerable<T>
 {
-    public readonly Queue<T> List;
-    private readonly T last;
+    public readonly Stack<T> List;
+    public T last;
 
-    public NonRepeatableInARowQueue()
+    public NonRepeatableInARowStack()
     {
-        List = new Queue<T>();
+        List = new Stack<T>();
         last = default(T);
     }
 
-    public NonRepeatableInARowQueue(T element)
+    public NonRepeatableInARowStack(T element)
     {
-        List = new Queue<T>();
-        List.Enqueue(element);
+        List = new Stack<T>();
+        List.Push(element);
         last = element;
     }
 
     public void Add(T item)
     {
-        if(!item.Equals(last))
-            List.Enqueue(item);
+        if (!item.Equals(last))
+        {
+            List.Push(item);
+            last = item;
+        }
     }
 
-    public T Dequeue()
+    public T Pop()
     {
-        return List.Dequeue();
+        return List.Pop();
+    }
+
+    public void Clear()
+    {
+        List.Clear();
     }
     public IEnumerator<T> GetEnumerator()
     {

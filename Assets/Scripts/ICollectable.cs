@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface ICollectable
 {
-    public void ObtainItemHandler();
+    public void BeEaten(Vector3 position);
 }
 

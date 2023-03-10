@@ -9,7 +9,6 @@ public class PinkGhostMovement : GhostMovement
     {
         var pacmanPosition = Pacman.transform.position;
         var shift = Pacman.GetComponent<MovementController>().velocity.normalized;
-        Debug.Log(Pacman.GetComponent<MovementController>().velocity.normalized);
         aimPoint = tileMap.WorldToCell(Pacman.transform.position + multiscale * shift);
     }
 }

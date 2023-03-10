@@ -7,8 +7,10 @@ public class PlayerMovement : MovementController
 {
 
     protected float speed;
-    private void Start()
+
+    protected override void InitiateVariables()
     {
+        base.InitiateVariables();
         speed = data.speed;
     }
     public void OnMove(InputValue inputValue)

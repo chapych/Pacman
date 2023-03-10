@@ -8,6 +8,5 @@ public class DataScriptableObject : ScriptableObject
     public float speed;
     [SerializeField]
     public float cellSize;
-    
-    
+    public float secondsToBeScary;
 }

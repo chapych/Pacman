@@ -16,33 +16,37 @@ public class MovementController : MonoBehaviour
 
     void Awake()
     {
+        InitiateVariables();
+    }
+
+    protected virtual void InitiateVariables()
+    {
         rb = GetComponent<Rigidbody2D>();
         cellSize = data.cellSize;
     }
 
     private void FixedUpdate()
     {
-        UpdateVelocity();
-        if (!IsWall() && nextVelocity.magnitude != 0)
+        if (IsWall(velocity, cellSize / 3))
         {
-            
-           // Debug.Log(this.transform.position + " position");
+            velocity = Vector3.zero;
+            return;
+        }
+
+        UpdateVelocity();
+        if (!IsWall(nextVelocity, cellSize) && nextVelocity.magnitude != 0)
+        {
             velocity = nextVelocity;
             nextVelocity = Vector3.zero;
-            
         }
         Vector2 translation = velocity * Time.fixedDeltaTime;
         rb.MovePosition((Vector2)transform.position + translation);
     }
-    protected bool IsWall()
+    bool IsWall(Vector2 direction, float depth)
     {
-        
-        RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, Vector2.one * cellSize * 0.7f, 0, nextVelocity, cellSize, walls);
-        return (raycastHit.collider != null);
+        RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, Vector2.one * cellSize * 0.7f, 0, direction, depth, walls);
+        return raycastHit.collider != null;
     }
 
-    protected virtual void UpdateVelocity()
-    {
-
-    }
+    protected virtual void UpdateVelocity() { }
 }

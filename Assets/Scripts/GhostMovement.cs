@@ -11,20 +11,27 @@ public class GhostMovement : MovementController
     private NonRepeatableInARowStack<Vector3> stack;
     float speed;
     public GameObject Pacman;
+    [SerializeField] private BigDot bigDot;
+    public bool isScaryModeOn;
+    float secondsToBeScary;
+    Coroutine coroutine;
 
-
-    private void Start()
+    protected override void InitiateVariables()
     {
-        
-        var start = new Vector3Int(0,0,0);
-        start.x = (int)Pacman.transform.position.x;
-        start.y = (int)Pacman.transform.position.y;
+        base.InitiateVariables();
+        bigDot.OnScaryGhosts += OnScaryGhostsHandler;
         speed = data.speed;
         stack = new NonRepeatableInARowStack<Vector3>();
-
+        isScaryModeOn = false;
+        secondsToBeScary = data.secondsToBeScary;
     }
     protected override void UpdateVelocity()
     {
+        //if (isScaryModeOn)
+        //{
+        //    nextVelocity = speed * RandomVelocity();
+        //    return;
+        //}
         DefineAimPoint();
         UpdateVelocityQueue();
         if (stack.List.Count == 0)
@@ -83,9 +90,39 @@ public class GhostMovement : MovementController
                     yield return new Vector3(currentX + (int)shiftX, currentY + (int)shiftY, 0);
     }
 
+    public void OnScaryGhostsHandler()
+    {
+        isScaryModeOn = true;
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+        }
+        coroutine = StartCoroutine(ScaryMode());
+    }
+
+
     protected virtual void DefineAimPoint()
     {
+        //    if (isScaryModeOn)
+        //    {
+        //        var xCoordinate = UnityEngine.Random.Range(-2, 2);
+        //        var yCoordinate = UnityEngine.Random.Range(-2, 2);
+        //        aimPoint = new Vector3(xCoordinate, yCoordinate, 0);
+        //        Debug.Log(aimPoint);
+        //    }
+    }
 
+    public Vector3 RandomVelocity()
+    {
+        var xCoordinate = UnityEngine.Random.Range(-1, 2);
+        var yCoordinate = UnityEngine.Random.Range(-1, 2);
+        return new Vector3(xCoordinate, yCoordinate);
+    }
+
+    IEnumerator ScaryMode()
+    {
+        yield return new WaitForSeconds(secondsToBeScary);
+        isScaryModeOn = false;
     }
 }
 

@@ -6,15 +6,17 @@ using UnityEngine.Tilemaps;
 
 public class InteractionWithElements : MonoBehaviour
 {
-    [SerializeField]
-    private Tilemap tilemap;
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Dots"))
-        {
-            tilemap.SetTile(tilemap.WorldToCell(this.transform.position), null);
-        }
-    }
+    public event Action<Vector3> OnBeEaten = x => { };
+    //bool hasEntered = false;
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        var collectable = other.GetComponent<ICollectable>();
+        if (collectable != null)
+        {
+            collectable.BeEaten(this.transform.position);
+        }
+        
+    }
 
 }

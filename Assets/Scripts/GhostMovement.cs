@@ -30,6 +30,10 @@ public class GhostMovement : MovementController
     
     protected override void UpdateVelocity()
     {
+        Debug.Log("---");
+        foreach(var el in path){
+            Debug.Log(el);
+        }
         DefineAimPoint();
         UpdateVelocityQueue();
         if (path.Length <= 1)
@@ -39,16 +43,23 @@ public class GhostMovement : MovementController
         }
         Vector3 nextPosition = path.Pop();
          nextVelocity = speed * (nextPosition - this.transform.position);
+         Debug.Log(this.transform.position + " " + nextPosition);
     }
     protected void UpdateVelocityQueue()
     {
-        path = BreadthFirstSearch(path.Value, aimPoint);
+        var pathStart = BreadthFirstSearch(this.transform.position, path.Value);
+        var pathEnd = BreadthFirstSearch(path.Value, aimPoint);
+        Debug.Log("PathStart" + pathStart);
+        path.Previous = pathEnd;
+        pathStart.Previous = path;
+        path = pathStart;
         if (path == null) return; //nextVelocity = null;
     }
     
     SingleLinkedList<Vector3> BreadthFirstSearch(Vector3 endOfPreviousPath, Vector3 aim) //at 1st iteration end..Path = this.transform.position
     {
         endOfPreviousPath = tileMap.WorldToCell(endOfPreviousPath);
+        
         var start = tileMap.WorldToCell(aim);
         var queue = new Queue<SingleLinkedList<Vector3>>();
         var visited = new HashSet<Vector3>();

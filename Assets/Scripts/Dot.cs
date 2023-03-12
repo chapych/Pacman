@@ -9,7 +9,6 @@ public class Dot : MonoBehaviour, ICollectable
      void Start()
     {
         tilemap = GetComponent<Tilemap>();
-        Debug.Log(tilemap);
     }
 
     public virtual void BeEaten(Vector3 position)

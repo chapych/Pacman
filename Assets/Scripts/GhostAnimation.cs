@@ -13,7 +13,6 @@ public class GhostAnimation : AnimationController
     {
         base.InitiateVariables();
         ghostMovement = GetComponent<GhostMovement>();
-        Debug.Log(ghostMovement);
     }
 
     protected override void AnimationUpdate()

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class SingleLinkedList<T> : IEnumerable<T>
 {
     public  T Value;
-    public readonly SingleLinkedList<T> Previous;
+    public  SingleLinkedList<T> Previous;
     public readonly int Length;
 
     public SingleLinkedList(T value, SingleLinkedList<T> previous = null)

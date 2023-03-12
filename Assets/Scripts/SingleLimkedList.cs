@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class SingleLinkedList<T> : IEnumerable<T>
 {
-    public readonly T Value;
+    public  T Value;
     public readonly SingleLinkedList<T> Previous;
     public readonly int Length;
 
@@ -23,6 +23,13 @@ public class SingleLinkedList<T> : IEnumerable<T>
             yield return pathItem.Value;
             pathItem = pathItem.Previous;
         }
+    }
+
+    public T Pop()
+    {
+        var value = this.Value;
+        this.Value = Previous.Value;
+        return value;
     }
 
     IEnumerator IEnumerable.GetEnumerator()

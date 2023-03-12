@@ -9,7 +9,7 @@ public class MovementController : MonoBehaviour
     [HideInInspector] public Vector3 Velocity;
     protected float cellSize;
     protected Rigidbody2D rb;
-    protected Vector2 nextVelocity;
+    protected Vector3 nextVelocity;
 
     void Awake() => InitiateVariables();
 

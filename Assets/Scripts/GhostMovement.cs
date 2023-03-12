@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -27,11 +28,6 @@ public class GhostMovement : MovementController
     }
     protected override void UpdateVelocity()
     {
-        //if (isScaryModeOn)
-        //{
-        //    nextVelocity = speed * RandomVelocity();
-        //    return;
-        //}
         DefineAimPoint();
         UpdateVelocityQueue();
         if (stack.List.Count == 0)
@@ -43,10 +39,15 @@ public class GhostMovement : MovementController
     }
     protected void UpdateVelocityQueue()
     {
+        SingleLinkedList<Vector3> path = BreadthFirstSearch(aimPoint);
+        if (path == null) return; //nextVelocity = null;
+
+        var fisrtTwoElemets = path.Select(x=>x)
+                   .Reverse()
+                   .Take(2);
+        
         stack.Clear();
-        var path = GetPath(aimPoint);
-        if (path == null) return;
-        var previous = path.Value;
+        Vector3 previous = path.Value;
         foreach (var point in path)
         {
             if (point == aimPoint)
@@ -56,11 +57,12 @@ public class GhostMovement : MovementController
         }
     }
     
-    SingleLinkedList<Vector3> GetPath(Vector3 aimPoint)
+    SingleLinkedList<Vector3> BreadthFirstSearch(Vector3 aimPoint)
     {
         var startPoint = tileMap.WorldToCell(this.transform.position) + Vector3.one * cellSize/2;
         var queue = new Queue<SingleLinkedList<Vector3>>();
         var visited = new HashSet<Vector3>();
+
         queue.Enqueue(new SingleLinkedList<Vector3>(startPoint));
         visited.Add(startPoint);
         while (queue.Count > 0)
@@ -74,7 +76,6 @@ public class GhostMovement : MovementController
                         var newList = new SingleLinkedList<Vector3>(item, currentList);
                         visited.Add(item);
                         queue.Enqueue(newList);
-                        Debug.DrawLine(currentList.Value, item, Color.red, 3);
                     }
         }
         return null;
@@ -99,26 +100,7 @@ public class GhostMovement : MovementController
         }
         coroutine = StartCoroutine(ScaryMode());
     }
-
-
-    protected virtual void DefineAimPoint()
-    {
-        //    if (isScaryModeOn)
-        //    {
-        //        var xCoordinate = UnityEngine.Random.Range(-2, 2);
-        //        var yCoordinate = UnityEngine.Random.Range(-2, 2);
-        //        aimPoint = new Vector3(xCoordinate, yCoordinate, 0);
-        //        Debug.Log(aimPoint);
-        //    }
-    }
-
-    public Vector3 RandomVelocity()
-    {
-        var xCoordinate = UnityEngine.Random.Range(-1, 2);
-        var yCoordinate = UnityEngine.Random.Range(-1, 2);
-        return new Vector3(xCoordinate, yCoordinate);
-    }
-
+    protected virtual void DefineAimPoint(){}
     IEnumerator ScaryMode()
     {
         yield return new WaitForSeconds(secondsToBeScary);

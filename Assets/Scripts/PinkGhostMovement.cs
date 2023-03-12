@@ -8,7 +8,7 @@ public class PinkGhostMovement : GhostMovement
     protected override void DefineAimPoint()
     {
         var pacmanPosition = Pacman.transform.position;
-        var shift = Pacman.GetComponent<MovementController>().velocity.normalized;
+        var shift = Pacman.GetComponent<MovementController>().Velocity.normalized;
         aimPoint = tileMap.WorldToCell(Pacman.transform.position + multiscale * shift);
     }
 }

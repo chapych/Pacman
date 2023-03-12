@@ -4,20 +4,14 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
-    [SerializeField]
-    protected DataScriptableObject data;
-    [SerializeReference]
-    protected LayerMask walls;
-    [HideInInspector]
-    public Vector3 velocity;
+    [SerializeField] protected DataScriptableObject data;
+    [SerializeField] protected LayerMask walls;
+    [HideInInspector] public Vector3 Velocity;
     protected float cellSize;
     protected Rigidbody2D rb;
     protected Vector2 nextVelocity;
 
-    void Awake()
-    {
-        InitiateVariables();
-    }
+    void Awake() => InitiateVariables();
 
     protected virtual void InitiateVariables()
     {
@@ -27,19 +21,20 @@ public class MovementController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (IsWall(velocity, cellSize / 3))
+        if (IsWall(Velocity, cellSize / 3))
         {
-            velocity = Vector3.zero;
+            Velocity = Vector3.zero;
             return;
         }
 
         UpdateVelocity();
+
         if (!IsWall(nextVelocity, cellSize) && nextVelocity.magnitude != 0)
         {
-            velocity = nextVelocity;
+            Velocity = nextVelocity;
             nextVelocity = Vector3.zero;
         }
-        Vector2 translation = velocity * Time.fixedDeltaTime;
+        Vector2 translation = Velocity * Time.fixedDeltaTime;
         rb.MovePosition((Vector2)transform.position + translation);
     }
     bool IsWall(Vector2 direction, float depth)
@@ -48,5 +43,5 @@ public class MovementController : MonoBehaviour
         return raycastHit.collider != null;
     }
 
-    protected virtual void UpdateVelocity() { }
+    protected virtual void UpdateVelocity() {}
 }

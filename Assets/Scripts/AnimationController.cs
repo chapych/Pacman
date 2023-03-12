@@ -22,7 +22,7 @@ public class AnimationController : MonoBehaviour
 
     void Update()
     {
-        this.velocity = characterMovement.velocity;
+        this.velocity = characterMovement.Velocity;
         AnimationUpdate();
     }
 

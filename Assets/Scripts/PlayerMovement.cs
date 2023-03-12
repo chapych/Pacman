@@ -6,14 +6,14 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MovementController
 {
 
-    protected float speed;
+    float speed;
 
     protected override void InitiateVariables()
     {
         base.InitiateVariables();
         speed = data.speed;
     }
-    public void OnMove(InputValue inputValue)
+    void OnMove(InputValue inputValue)
     {
         Vector2 inputVector = inputValue.Get<Vector2>();
         if (inputVector.magnitude == 0) return;
